@@ -1,6 +1,21 @@
 const Transaction = require("../models/transaction.js");
 const User = require("../models/user.js");
 const { format } = require("date-fns");
+const { fetchStockPrice } = require("../service/stockService");
+
+// Fetch live stock price from Alpha Vantage
+exports.getLiveStockPrice = async (req, res) => {
+    try {
+        const { ticker } = req.query;
+        if (!ticker) {
+            return res.status(400).json({ message: "No stock ticker provided" });
+        }
+        const priceData = await fetchStockPrice(ticker);
+        res.status(200).json(priceData);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 exports.getTransactionHistory = async (req, res) => {
     try {
