@@ -79,7 +79,7 @@ const LandingPage = () => {
 
     <div>
       <nav>
-        <div className="nav__logo">Tradelab</div>
+        <div className="nav__logo"><img src="/tradelab-logo.svg" alt="Tradelab Logo" style={{height:32,verticalAlign:'middle',marginRight:8}}/>Tradelab</div>
           <a href="#features">Features</a>
           <a href="#how-it-works">How It Works</a>
           <a href="#benefits">Benefits</a>

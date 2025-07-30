@@ -50,6 +50,7 @@ export default function Header() {
             >
               <MenuIcon sx={{ fontSize: 25 }} />
             </IconButton>
+            <img src={process.env.PUBLIC_URL + '/tradelab-logo.svg'} alt="Tradelab Logo" style={{height:32,verticalAlign:'middle',marginRight:8}} />
             <Typography variant="h5" component="div" sx={{ fontWeight: 600 }}>
               Tradelab
             </Typography>
