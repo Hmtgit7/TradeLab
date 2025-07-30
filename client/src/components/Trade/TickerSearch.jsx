@@ -11,7 +11,7 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
-import axios from "axios";
+import { getLiveStockPrice } from "../../api/stockApi";
 import SearchIcon from "@mui/icons-material/Search";
 
 const TickerSearch = ({ onSelectStock }) => {
@@ -20,38 +20,38 @@ const TickerSearch = ({ onSelectStock }) => {
     const [options, setOptions] = useState([]);
     const theme = useTheme();
 
-    const apiKey = process.env.REACT_APP_API_KEY;
 
+    // Use backend to search for tickers (for demo, use a static list or extend backend if needed)
     const fetchTickers = async () => {
         setLoading(true);
-        console.log(apiKey);
         try {
-            const response = await axios.get(
-                `https://www.alphavantage.co/query`,
-                {
-                    params: {
-                        function: "SYMBOL_SEARCH",
-                        keywords: inputValue,
-                        apikey: apiKey,
-                    },
-                }
+            // For demo, use a static list. Replace with backend call if you add a proxy endpoint.
+            const staticTickers = [
+                { symbol: "AAPL", name: "Apple Inc." },
+                { symbol: "MSFT", name: "Microsoft Corporation" },
+                { symbol: "GOOGL", name: "Alphabet Inc." },
+                { symbol: "TSLA", name: "Tesla Inc." },
+                { symbol: "AMZN", name: "Amazon.com Inc." },
+            ];
+            const filtered = staticTickers.filter(
+                t => t.symbol.toLowerCase().includes(inputValue.toLowerCase()) ||
+                     t.name.toLowerCase().includes(inputValue.toLowerCase())
             );
-            const results = response.data.bestMatches || [];
-            console.log(response.data);
-
-            const tickers = results.map((item) => ({
-                symbol: item["1. symbol"],
-                name: item["2. name"],
-            }));
-            setOptions(tickers);
+            setOptions(filtered);
         } catch (error) {
             console.error("Error fetching ticker data:", error);
         }
         setLoading(false);
     };
 
-    const handleSelect = (option) => {
-        onSelectStock(option);
+    const handleSelect = async (option) => {
+        try {
+            // Fetch live price from backend
+            const priceData = await getLiveStockPrice(option.symbol);
+            onSelectStock({ ...option, price: priceData.price });
+        } catch (error) {
+            onSelectStock(option); // fallback
+        }
         setOptions([]);
         setInputValue("");
     };
