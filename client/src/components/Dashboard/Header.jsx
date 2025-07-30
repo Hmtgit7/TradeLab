@@ -1,9 +1,12 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import { Toolbar, Typography, IconButton } from '@mui/material';
+import { Toolbar, Typography, IconButton, Button } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { clearUser } from '../../redux/UserSlice';
+import { removeToken, removeUserInfo } from '../../auth';
 import { toggleSidebar } from '../../redux/SidebarSlice';
 import { toggleMobileMenu } from '../../redux/MobileMenuSlice';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -20,6 +23,13 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 export default function Header() {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    removeToken();
+    removeUserInfo();
+    dispatch(clearUser());
+    navigate('/');
+  };
 
   const handleSidebarToggle = () => {
     dispatch(toggleSidebar());
@@ -64,6 +74,14 @@ export default function Header() {
                 <DarkModeOutlined sx={{ fontSize: 25 }} />
               )}
             </IconButton>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleLogout}
+              sx={{ ml: 2, borderColor: theme.palette.secondary.main, color: theme.palette.secondary.main }}
+            >
+              Logout
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>
